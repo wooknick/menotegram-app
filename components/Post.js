@@ -8,6 +8,7 @@ import { gql } from "apollo-boost";
 import constants from "../constants";
 import styles from "../styles";
 import { useMutation } from "react-apollo-hooks";
+import { parseCreatedAt } from "../util";
 
 export const TOGGLE_LIKE = gql`
     mutation toggleLike($postId: String!) {
@@ -49,7 +50,11 @@ const CommentCount = styled.Text`
     opacity: 0.5;
     font-size: 12px;
 `;
-
+const TimeStamp = styled.Text`
+    margin-top: 5px;
+    opacity: 0.5;
+    font-size: 10px;
+`;
 const Post = ({
     id,
     user,
@@ -58,7 +63,8 @@ const Post = ({
     likeCount: likeCountProp,
     caption,
     comments = [],
-    isLiked: isLikedProp
+    isLiked: isLikedProp,
+    createdAt
 }) => {
     const [isLiked, setIsLiked] = useState(isLikedProp);
     const [likeCount, setLikeCount] = useState(likeCountProp);
@@ -147,6 +153,7 @@ const Post = ({
                 <Touchable>
                     <CommentCount>See all {comments.length} comments</CommentCount>
                 </Touchable>
+                <TimeStamp>{parseCreatedAt(createdAt)}</TimeStamp>
             </InfoContainer>
         </Container>
     );
