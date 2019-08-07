@@ -5,12 +5,15 @@ import PropTypes from "prop-types";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useQuery } from "react-apollo-hooks";
 import { gql } from "apollo-boost";
+import Loader from "../../../components/Loader";
+import SquarePhoto from "../../../components/SquarePhoto";
 
 export const SEARCH = gql`
     query search($term: String!) {
         searchPost(term: $term) {
             id
             files {
+                id
                 url
             }
             likeCount
@@ -20,9 +23,8 @@ export const SEARCH = gql`
 `;
 
 const View = styled.View`
-    justify-content: center;
-    align-items: center;
     flex: 1;
+    flex-direction: row;
 `;
 
 const Text = styled.Text``;
@@ -33,9 +35,9 @@ const SearchPresenter = ({ term, shouldFetch }) => {
         variables: {
             term
         },
-        skip: !shouldFetch
+        skip: !shouldFetch,
+        fetchPolicy: "network-only"
     });
-    console.log(data, loading);
     const onRefresh = async () => {
         try {
             setRefreshing(true);
@@ -48,9 +50,20 @@ const SearchPresenter = ({ term, shouldFetch }) => {
     };
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <ScrollView
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            />
+            {loading ? (
+                <Loader />
+            ) : (
+                <ScrollView
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }>
+                    <View>
+                        {data &&
+                            data.searchPost &&
+                            data.searchPost.map(post => <SquarePhoto key={post.id} {...post} />)}
+                    </View>
+                </ScrollView>
+            )}
         </TouchableWithoutFeedback>
     );
 };

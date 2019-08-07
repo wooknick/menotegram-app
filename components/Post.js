@@ -97,7 +97,7 @@ const Post = ({
                 </Touchable>
             </Header>
             <Swiper
-                activeDotColor="white"
+                activeDotColor={styles.lightGreyColor}
                 dotStyle={{ marginBottom: -10 }}
                 activeDotStyle={{ marginBottom: -10 }}
                 style={{ height: constants.height / 2.5 }}>

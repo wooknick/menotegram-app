@@ -1,39 +1,19 @@
 import React, { useState } from "react";
-import { ScrollView, RefreshControl } from "react-native";
+import { TouchableWithoutFeedback, ScrollView, RefreshControl } from "react-native";
 import { gql } from "apollo-boost";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
 import { useQuery } from "react-apollo-hooks";
 import Post from "../../components/Post";
+import { POST_FRAGMENT } from "../../fragments";
 
 const FEED_QUERY = gql`
     {
         seeFeed {
-            id
-            location
-            caption
-            user {
-                id
-                avatar
-                username
-            }
-            files {
-                id
-                url
-            }
-            likeCount
-            isLiked
-            comments {
-                id
-                text
-                user {
-                    id
-                    username
-                }
-            }
-            createdAt
+            ...PostParts
         }
     }
+    ${POST_FRAGMENT}
 `;
 
 const View = styled.View`
@@ -50,7 +30,7 @@ export default () => {
     const refresh = async () => {
         try {
             setRefreshing(true);
-            await refetch();
+            await refetch({ fetchPolicy: "network-only" });
         } catch (e) {
             console.log(e);
         } finally {
@@ -58,12 +38,17 @@ export default () => {
         }
     };
     return (
-        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}>
+        <TouchableWithoutFeedback>
             {loading ? (
                 <Loader />
             ) : (
-                data && data.seeFeed && data.seeFeed.map(post => <Post key={post.id} {...post} />)
+                <ScrollView
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} />}>
+                    {data &&
+                        data.seeFeed &&
+                        data.seeFeed.map(post => <Post key={post.id} {...post} />)}
+                </ScrollView>
             )}
-        </ScrollView>
+        </TouchableWithoutFeedback>
     );
 };
