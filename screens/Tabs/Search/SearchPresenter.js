@@ -7,6 +7,7 @@ import { useQuery } from "react-apollo-hooks";
 import { gql } from "apollo-boost";
 import Loader from "../../../components/Loader";
 import SquarePhoto from "../../../components/SquarePhoto";
+import Grid from "react-native-grid-component";
 
 export const SEARCH = gql`
     query search($term: String!) {
@@ -58,9 +59,14 @@ const SearchPresenter = ({ term, shouldFetch }) => {
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }>
                     <View>
-                        {data &&
-                            data.searchPost &&
-                            data.searchPost.map(post => <SquarePhoto key={post.id} {...post} />)}
+                        {data && data.searchPost && (
+                            <Grid
+                                keyExtractor={item => item.id}
+                                renderItem={item => <SquarePhoto {...item} />}
+                                data={data.searchPost.reverse()}
+                                numColumns={3}
+                            />
+                        )}
                     </View>
                 </ScrollView>
             )}

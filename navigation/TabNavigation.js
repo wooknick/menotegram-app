@@ -5,6 +5,7 @@ import Home from "../screens/Tabs/Home";
 import Notifications from "../screens/Tabs/Notifications";
 import Profile from "../screens/Tabs/Profile";
 import Detail from "../screens/Detail";
+import UserDetail from "../screens/UserDetail";
 import Search from "../screens/Tabs/Search";
 import MessagesLink from "../components/MessagesLink";
 import NavIcon from "../components/NavIcon";
@@ -21,16 +22,23 @@ const stackFactory = (initialRoute, customConfig) =>
             Detail: {
                 screen: Detail,
                 navigationOptions: {
-                    headerTintColor: styles.blackColor,
-                    title: "Photo",
-                    headerLeftContainerStyle: {
-                        padding: 5
-                    }
+                    title: "Photo"
                 }
+            },
+            UserDetail: {
+                screen: UserDetail,
+                navigationOptions: ({ navigation }) => ({
+                    title: navigation.getParam("username")
+                })
             }
         },
         {
             defaultNavigationOptions: {
+                headerBackTitle: null,
+                headerTintColor: styles.blackColor,
+                headerLeftContainerStyle: {
+                    padding: 5
+                },
                 headerStyle: { ...stackStyles }
             }
         }
@@ -105,7 +113,7 @@ export default createBottomTabNavigator(
         },
         Profile: {
             screen: stackFactory(Profile, {
-                title: "Profile"
+                title: "My Profile"
             }),
             navigationOptions: {
                 tabBarIcon: ({ focused }) => (
@@ -118,7 +126,7 @@ export default createBottomTabNavigator(
         }
     },
     {
-        initialRouteName: "Home",
+        initialRouteName: "Profile",
         tabBarOptions: {
             showLabel: false,
             style: { backgroundColor: "#FAFAFA" }
