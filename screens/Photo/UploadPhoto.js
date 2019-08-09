@@ -7,7 +7,6 @@ import { useMutation } from "react-apollo-hooks";
 import useInput from "../../hooks/useInput";
 import styles from "../../styles";
 import constants from "../../constants";
-import { NavigationActions } from "react-navigation";
 import { FEED_QUERY } from "../Tabs/Home";
 
 const UPLOAD = gql`
@@ -79,7 +78,7 @@ export default ({ navigation }) => {
             setIsLoading(true);
             const {
                 data: { location }
-            } = await axios.post("http://localhost:4000/api/upload", formData, {
+            } = await axios.post("https://menotegram-backend.herokuapp.com/api/upload", formData, {
                 headers: {
                     "content-type": "multipart/form-data"
                 }
@@ -97,6 +96,7 @@ export default ({ navigation }) => {
                 navigation.navigate("TabNavigation");
             }
         } catch (e) {
+            console.log(e);
             Alert.alert("Cant upload", "Try later");
             setIsLoading(false);
         } finally {
