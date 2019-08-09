@@ -11,6 +11,7 @@ const MainNavigation = createStackNavigator(
         MessageNavigation
     },
     {
+        initialRouteName: "TabNavigation",
         headerMode: "none",
         mode: "modal",
         defaultNavigationOptions: {
